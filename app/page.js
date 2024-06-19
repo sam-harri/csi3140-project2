@@ -35,12 +35,12 @@ export default function Home() {
         <div className="w-full max-w-md">
           <div className="flex flex-col bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
-              <Image src="/wordle.png" alt="Yahtzee" width={400} height={200} className="w-full h-48 object-cover rounded-lg" />
+              <Image src="/hangman.png" alt="Hangman" width={400} height={200} className="w-full h-48 object-cover rounded-lg" />
             </div>
             <div className="px-4 pb-4">
-              <h2 className="text-xl font-bold mb-2">Play Yahtzee</h2>
-              <p className="text-gray-700 mb-4">Roll the dice and score big in Yahtzee!</p>
-              <a href="/yahtzee" className="block text-center bg-gray-800 text-white py-2 rounded-lg">Play Yahtzee</a>
+              <h2 className="text-xl font-bold mb-2">Play Hangman</h2>
+              <p className="text-gray-700 mb-4">Find the word before he gets hung!</p>
+              <a href="/hangman" className="block text-center bg-gray-800 text-white py-2 rounded-lg">Play Hangman</a>
             </div>
           </div>
         </div>
