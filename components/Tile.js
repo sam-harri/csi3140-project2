@@ -20,7 +20,7 @@ const Tile = ({
   }
 
   let borderColor = "border-gray-300";
-  if (letter) borderColor = "border-[#878A8C] dark:border-[#565758]";
+  if (letter) borderColor = "border-[#878A8C]";
 
 
   const [evalClass, setEvalClass] = useState("not-evaluated");
