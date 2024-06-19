@@ -4,7 +4,7 @@ import Head from "next/head";
 import { FaGithub } from "react-icons/fa";
 import { Toaster, toast } from "react-hot-toast";
 import Board from "@/components/Board";
-import { generate, count } from "random-words";
+import { generate } from "random-words";
 
 const initialBoardProp = {
   rows: [],
@@ -68,11 +68,11 @@ export default function Home() {
     const isWinner = boardProp.rows.some(row => row.evaluation.every(e => e === "correct"));
     if (isWinner) {
       toast.success("Congratulations, you've won!");
-      setTimeout(() => newGame(), 4000);
+      setTimeout(() => newGame(), 2000);
     }
     if (boardProp.rows.length === 6 && !isWinner) {
       toast.error("Better luck next time!");
-      setTimeout(() => newGame(), 4000);
+      setTimeout(() => newGame(), 2000);
     }
   }, [boardProp.rows]);
 

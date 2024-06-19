@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 const Tile = ({
   letter,
   evaluation,
@@ -20,23 +18,19 @@ const Tile = ({
   }
 
   let borderColor = "border-gray-300";
-  if (letter) borderColor = "border-[#878A8C]";
+  if (letter) borderColor = "border-black";
 
-
-  const [evalClass, setEvalClass] = useState("not-evaluated");
 
   return (
     <>
       <div
-        className={`tile ${evalClass} text-[32px] font-bold uppercase`}
+        className={`text-[32px] font-bold uppercase`}
       >
-        <div className="tile-inner">
           <div
-            className={`tile-front flex h-[58px] w-[58px] items-center justify-center border-2 ${borderColor} text-black ${bgColor}`}
+            className={`flex h-[58px] w-[58px] items-center justify-center border-2 ${borderColor} text-black ${bgColor}`}
           >
             {letter}
           </div>
-        </div>
       </div>
     </>
   );
