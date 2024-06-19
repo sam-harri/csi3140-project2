@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    margin: 0;
+    background-color: #fce4ec;
+}
+
+.game-container {
+    text-align: center;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.hangman-container img {
+    width: 150px;
+    height: auto;
+    margin: 20px 0;
+}
+
+.word-container {
+    font-size: 2em;
+    letter-spacing: 0.5em;
+    margin: 20px 0;
+    color: #333;
+}
+
+.letters-container {
+    margin: 20px 0;
+}
+
+.letters-container button {
+    font-size: 1.2em;
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    background-color: #f8bbd0;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.letters-container button:hover {
+    background-color: #f48fb1;
+}
+
+.status-container {
+    margin-top: 20px;
+}
+
+.status-container p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+#restart-button, #check-answer-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: #f48fb1;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#restart-button:hover, #check-answer-button:hover {
+    background-color: #f06292;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s;
+}
