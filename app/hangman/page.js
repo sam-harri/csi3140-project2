@@ -11,9 +11,11 @@ export default function Home() {
   const [solution, setSolution] = useState([]);
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [incorrectGuesses, setIncorrectGuesses] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   const newGame = () => {
     let word = generate({ minLength: 5, maxLength: 15 });
+    setLoaded(true);
     toast.success("New game started!");
     console.log(word);
     setSolution(word.toUpperCase().split(""));
@@ -54,12 +56,12 @@ export default function Home() {
 
   useEffect(() => {
     let isWinner = solution.every(letter => guessedLetters.includes(letter));
-    if (isWinner) {
+    if (isWinner && loaded) {
       toast.success("Congratulations, you've won!");
       setTimeout(() => newGame(), 4000);
     }
 
-    if (incorrectGuesses.length >= 6 && !isWinner) { // Assuming 6 is the max incorrect guesses
+    if (incorrectGuesses.length >= 6 && !isWinner) {
       toast.error("Better luck next time!");
       setTimeout(() => newGame(), 4000);
     }
@@ -69,7 +71,7 @@ export default function Home() {
     <div className={`flex h-screen w-full flex-col bg-gray-100`}>
       <header className="flex h-16 w-full items-center justify-center border-b-2 border-b-gray-500 text-black">
         <div className="absolute left-0 flex items-center justify-center pl-4">
-          <a href="https://github.com/sam-harri/">
+          <a href="https://github.com/sam-harri/csi3140-project2">
             <FaGithub size={24} />
           </a>
         </div>
