@@ -34,7 +34,7 @@ Hangman is a classic word-guessing game where you try to guess the letters of a 
 - **Hangman Drawing:** Graphical representation of the hangman figure that progresses with wrong guesses.
 
 ### Example Screenshot:
-![Hangman Game Screenshot](docss/hangman_screenshot.png)
+![Hangman Game Screenshot](docs/hangman_screenshot.png)
 
 ---
 
