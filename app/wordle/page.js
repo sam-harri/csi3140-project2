@@ -13,11 +13,13 @@ const initialBoardProp = {
 export default function Home() {
   const [boardProp, setBoardProp] = useState(initialBoardProp);
   const [inputWord, setInputWord] = useState("");
+  const [word, setWord] = useState("");
 
   const newGame = () => {
     let word = generate({ minLength: 5, maxLength: 5 })
     toast.success("New game started!");
     console.log(word)
+    setWord(word);
     setBoardProp(initialBoardProp)
     setBoardProp((prev) => ({
       ...prev,
@@ -70,7 +72,7 @@ export default function Home() {
       setTimeout(() => newGame(), 2000);
     }
     if (boardProp.rows.length === 6 && !isWinner) {
-      toast.error("Better luck next time!");
+      toast.error(`The word was ${word}! Better luck next time!`);
       setTimeout(() => newGame(), 2000);
     }
   }, [boardProp.rows]);

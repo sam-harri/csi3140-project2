@@ -12,9 +12,11 @@ export default function Home() {
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [incorrectGuesses, setIncorrectGuesses] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [word, setWord] = useState("");
 
   const newGame = () => {
     let word = generate({ minLength: 5, maxLength: 15 });
+    setWord(word);
     setLoaded(true);
     toast.success("New game started!");
     console.log(word);
@@ -62,7 +64,7 @@ export default function Home() {
     }
 
     if (incorrectGuesses.length >= 6 && !isWinner) {
-      toast.error("Better luck next time!");
+      toast.error(`The word was ${word}! Better luck next time!`);
       setTimeout(() => newGame(), 4000);
     }
   }, [guessedLetters, incorrectGuesses]);
