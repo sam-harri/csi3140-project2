@@ -9,8 +9,6 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// MongoDB connection details
-
 $uri = $_ENV['URI'];
 $client = new Client($uri);
 
