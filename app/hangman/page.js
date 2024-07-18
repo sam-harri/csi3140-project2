@@ -1,28 +1,40 @@
 'use client';
 import { useEffect, useState } from "react";
-import Head from "next/head";
 import { FaGithub } from "react-icons/fa";
 import { Toaster, toast } from "react-hot-toast";
-import { generate } from "random-words";
 import Image from 'next/image';
+import axiosInstance from "../axiosinstance";
 
 export default function Home() {
   const [inputWord, setInputWord] = useState("");
-  const [solution, setSolution] = useState([]);
-  const [guessedLetters, setGuessedLetters] = useState([]);
-  const [incorrectGuesses, setIncorrectGuesses] = useState([]);
-  const [loaded, setLoaded] = useState(false);
-  const [word, setWord] = useState("");
+  const [gameId, setGameId] = useState("");
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [gameStateArray, setGameStateArray] = useState([]);
+  const [numIncorrectGuesses, setNumIncorrectGuesses] = useState(0);
 
-  const newGame = () => {
-    let word = generate({ minLength: 5, maxLength: 15 });
-    setWord(word);
-    setLoaded(true);
-    toast.success("New game started!");
-    console.log(word);
-    setSolution(word.toUpperCase().split(""));
-    setGuessedLetters([]);
-    setIncorrectGuesses([]);
+  const newGame = async () => {
+    try {
+      const response = await axiosInstance.get('/hangman/newgame');
+      const { game_id, word_length } = response.data;
+      setGameId(game_id);
+      setGameStateArray(Array(word_length).fill(""));
+      setNumIncorrectGuesses(0);
+      fetchLeaderboard();
+      toast.success("New game started!");
+    } catch (error) {
+      console.error("Failed to start a new game", error);
+      toast.error("Failed to start a new game");
+    }
+  };
+
+  const fetchLeaderboard = async () => {
+    try {
+      const response = await axiosInstance.get('/hangman/leaderboard');
+      setLeaderboard(response.data);
+    } catch (error) {
+      console.error("Failed to fetch leaderboard", error);
+      toast.error("Failed to fetch leaderboard");
+    }
   };
 
   useEffect(() => {
@@ -33,44 +45,43 @@ export default function Home() {
     setInputWord(e.target.value.toUpperCase());
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (inputWord.length !== 1) {
-      toast.error("Can Only Submit One Letter At A Time");
+      toast.error("Can only submit one letter at a time");
       return;
     }
 
-    if (guessedLetters.includes(inputWord) || incorrectGuesses.includes(inputWord)) {
-      toast.error("Letter already guessed");
-      setInputWord("");
-      return;
-    }
+    try {
+      const response = await axiosInstance.post('/hangman/guess', {
+        game_id: gameId,
+        letter: inputWord
+      });
+      const game = response.data;
 
-    if (solution.includes(inputWord)) {
-      setGuessedLetters([...guessedLetters, inputWord]);
-      toast.success("Correct guess!");
-    } else {
-      setIncorrectGuesses([...incorrectGuesses, inputWord]);
-      toast.error("Incorrect guess!");
+      setGameStateArray(game.game);
+      setNumIncorrectGuesses(game.num_incorrect);
+
+      if (game.message.includes('Incorrect')) {
+        toast.error(game.message);
+      } else if (game.message.includes('already')) {
+        toast.error(game.message);
+      }  else {
+        toast.success(game.message);
+      }
+
+      if (game.finished) {
+        setTimeout(() => newGame(), 2000);
+      }
+    } catch (error) {
+      console.error("Failed to submit guess", error);
+      toast.error("Failed to submit guess");
     }
 
     setInputWord("");
   };
 
-  useEffect(() => {
-    let isWinner = solution.every(letter => guessedLetters.includes(letter));
-    if (isWinner && loaded) {
-      toast.success("Congratulations, you've won!");
-      setTimeout(() => newGame(), 4000);
-    }
-
-    if (incorrectGuesses.length >= 6 && !isWinner) {
-      toast.error(`The word was ${word}! Better luck next time!`);
-      setTimeout(() => newGame(), 4000);
-    }
-  }, [guessedLetters, incorrectGuesses]);
-
   return (
-    <div className={`flex h-screen w-full flex-col bg-gray-100`}>
+    <div className={`flex w-full min-h-screen flex-col bg-gray-100`}>
       <header className="flex h-16 w-full items-center justify-center border-b-2 border-b-gray-500 text-black">
         <div className="absolute left-0 flex items-center justify-center pl-4">
           <a href="https://github.com/sam-harri/csi3140-project2">
@@ -82,7 +93,7 @@ export default function Home() {
       <main className="flex flex-col items-center justify-center h-full w-full space-y-8">
         <div className="flex justify-center w-full">
           <Image
-            src={`/hangman${incorrectGuesses.length}.png`}
+            src={`/hangman${numIncorrectGuesses}.png`}
             alt="Hangman"
             width={400}
             height={400}
@@ -92,12 +103,12 @@ export default function Home() {
 
         <div className="flex items-center justify-center w-full space-x-2">
           {
-            solution.map((letter, i) => (
+            gameStateArray.map((letter, i) => (
               <div
                 key={i}
                 className={`border-b-8 flex h-[58px] w-[58px] items-center justify-center text-black text-[32px]`}
               >
-                {guessedLetters.includes(letter) ? letter : ""}
+                {letter || "_"}
               </div>
             ))
           }
@@ -110,13 +121,35 @@ export default function Home() {
             onChange={handleInputChange}
             className="p-2 border border-gray-500 rounded text-black focus:outline-none"
             maxLength="1"
+            disabled={gameStateArray.every(letter => letter !== "")}
           />
           <button
             onClick={handleSubmit}
             className="p-2 bg-gray-800 text-white rounded"
+            disabled={gameStateArray.every(letter => letter !== "")}
           >
             Submit
           </button>
+        </div>
+
+        <div className="w-full max-w-lg px-4 py-6">
+          <h2 className="text-2xl font-bold text-center mb-4">Leaderboard</h2>
+          <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="py-2 px-4 border-b">Word</th>
+                <th className="py-2 px-4 border-b">Incorrect Guesses</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaderboard.map(([word, incorrectGuesses], index) => (
+                <tr key={index} className="text-center">
+                  <td className="py-2 px-4 border-b">{word}</td>
+                  <td className="py-2 px-4 border-b">{incorrectGuesses}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </main>
       <Toaster />
