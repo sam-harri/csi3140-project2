@@ -4,6 +4,7 @@ import { FaGithub } from "react-icons/fa";
 import { Toaster, toast } from "react-hot-toast";
 import Image from 'next/image';
 import axiosInstance from "../axiosinstance";
+import Link from "next/link";
 
 export default function Home() {
   const [inputWord, setInputWord] = useState("");
@@ -65,7 +66,7 @@ export default function Home() {
         toast.error(game.message);
       } else if (game.message.includes('already')) {
         toast.error(game.message);
-      }  else {
+      } else {
         toast.success(game.message);
       }
 
@@ -91,6 +92,12 @@ export default function Home() {
         <div className="text-4xl font-bold">Hangman Clone</div>
       </header>
       <main className="flex flex-col items-center justify-center h-full w-full space-y-8">
+        <div className="absolute left-0 top-16 pl-4 mt-4">
+          <Link href="/" className="bg-gray-700 text-gray-300 px-4 py-2 rounded border border-gray-700 hover:bg-gray-300 hover:text-gray-700">
+            Back
+          </Link>
+        </div>
+
         <div className="flex justify-center w-full">
           <Image
             src={`/hangman${numIncorrectGuesses}.png`}

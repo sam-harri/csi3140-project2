@@ -99,17 +99,23 @@ function makeHangmanGuess($client) {
 }
 
 function getHangmanLeaderboard($client) {
-    $leaderboard = $client->gamehub->hangmangames->find(
-        ['won' => true],
-        ['sort' => ['incorrect_guesses' => 1]]
-    )->toArray();
+    $pipeline = [
+        ['$match' => ['won' => true]],
+        ['$addFields' => ['num_incorrect_guesses' => ['$size' => '$incorrect_guesses']]],
+        ['$sort' => ['num_incorrect_guesses' => 1]],
+        ['$limit' => 10],
+        ['$project' => ['word' => 1, 'num_incorrect_guesses' => 1]]
+    ];
+
+    $leaderboard = $client->gamehub->hangmangames->aggregate($pipeline)->toArray();
 
     $formattedLeaderboard = array_map(function($entry) {
-        return [$entry['word'], count($entry['incorrect_guesses'])];
+        return [$entry['word'], $entry['num_incorrect_guesses']];
     }, $leaderboard);
 
     echo json_encode($formattedLeaderboard);
 }
+
 
 $words = [
     'EXAMPLE', 'HANGMAN', 'COMPUTER', 'PROGRAMMING', 'DEVELOPER', 

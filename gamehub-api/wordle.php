@@ -79,18 +79,23 @@ function makeWordleGuess($client) {
 }
 
 function getWordleLeaderboard($client) {
-    $leaderboard = $client->gamehub->wordlegames->aggregate([
+    $pipeline = [
         ['$match' => ['won' => true]],
         ['$addFields' => ['num_guesses' => ['$size' => '$guesses']]],
-        ['$sort' => ['num_guesses' => 1]]
-    ])->toArray();
+        ['$sort' => ['num_guesses' => 1]],
+        ['$limit' => 10],
+        ['$project' => ['word' => 1, 'num_guesses' => 1]]
+    ];
+
+    $leaderboard = $client->gamehub->wordlegames->aggregate($pipeline)->toArray();
 
     $formattedLeaderboard = array_map(function($entry) {
-        return [$entry['word'], count($entry['guesses'])];
+        return [$entry['word'], $entry['num_guesses']];
     }, $leaderboard);
 
     echo json_encode($formattedLeaderboard);
 }
+
 
 $words = [
     'ARRAY', 'ASCII', 'BASIC', 'BATCH', 'BYTES', 'CACHE', 'CLASS', 'CLICK', 'CLOUD', 'CODEC',

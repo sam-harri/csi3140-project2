@@ -4,6 +4,7 @@ import { FaGithub } from "react-icons/fa";
 import { Toaster, toast } from "react-hot-toast";
 import Board from "@/components/Board";
 import axiosInstance from "../axiosinstance";
+import Link from "next/link";
 
 const initialBoardProp = {
   rows: [],
@@ -100,6 +101,11 @@ export default function Home() {
         <div className="text-4xl font-bold">Wordle Clone</div>
       </header>
       <main className="flex flex-col items-center">
+        <div className="absolute left-0 top-16 pl-4 mt-4">
+          <Link href="/" className="bg-gray-700 text-gray-300 px-4 py-2 rounded border border-gray-700 hover:bg-gray-300 hover:text-gray-700">
+            Back
+          </Link>
+        </div>
         <div className="flex items-center mt-12">
           <Board boardProp={boardProp} />
         </div>
