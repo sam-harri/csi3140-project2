@@ -36,6 +36,11 @@ Hangman is a classic word-guessing game where you try to guess the letters of a 
 ### Example Screenshot:
 ![Hangman Game Screenshot](docs/hangman_screenshot.png)
 
+### Leaderboard
+The game features a leaderboard that ranks players based on the least amount of missed guesses. You can view the top players and their scores to see how you compare.
+
+![Hangman Leaderboard](docs/hangman_leaderboard.png)
+
 ---
 
 # Wordle
@@ -67,5 +72,10 @@ Wordle is a word puzzle game where you have six attempts to guess a five-letter 
 
 ### Example Screenshot:
 ![Wordle Game Screenshot](docs/wordle_screenshot.png)
+
+### Leaderboard
+Wordle also includes a leaderboard that ranks players based on the least number of guesses required to find the correct word. Check out the top scores to challenge yourself against the best players.
+
+![Wordle Leaderboard](docs/wordle_leaderboard.png)
 
 ---
